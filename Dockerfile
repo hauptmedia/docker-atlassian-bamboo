@@ -7,14 +7,19 @@ ENV		MYSQL_CONNECTOR_J_VERSION 5.1.34
 ENV		BAMBOO_HOME     	/var/atlassian/application-data/bamboo
 ENV		BAMBOO_INSTALL_DIR	/opt/atlassian/bamboo
 
+ENV		SENCHA_CMD_VERSION	5.1.1.39
+ENV		SENCHA_CMD_FILENAME	SenchaCmd-${SENCHA_CMD_VERSION}-linux-x64
+ENV		SENCHA_CMD_DOWNLOAD_URL http://cdn.sencha.com/cmd/${SENCHA_CMD_VERSION}/${SENCHA_CMD_FILENAME}.run.zip
+
 ENV		RUN_USER            daemon
 ENV		RUN_GROUP           daemon
 
 ENV             DEBIAN_FRONTEND noninteractive
+ENV		PATH /opt/Sencha/Cmd/${SENCHA_CMD_VERSION}:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 # install needed debian packages & clean up
 RUN             apt-get update && \
-                apt-get install -y --no-install-recommends curl tar xmlstarlet ca-certificates git php5-cli php5-curl php5-mysql php5-xdebug phpunit openssh-client && \
+                apt-get install -y --no-install-recommends curl tar xmlstarlet ca-certificates git php5-cli php5-curl php5-mysql php5-xdebug phpunit openssh-client ruby unzip && \
                 apt-get clean autoclean && \
                 apt-get autoremove --yes && \
                 rm -rf /var/lib/{apt,dpkg,cache,log}/
@@ -30,6 +35,13 @@ RUN             curl -L --silent http://dev.mysql.com/get/Downloads/Connector-J/
                 cp /tmp/mysql-connector-java-${MYSQL_CONNECTOR_J_VERSION}-bin.jar ${BAMBOO_INSTALL_DIR}/lib && \
                 rm -rf /tmp/*
 
+# integrate SenchaCmd
+RUN		curl -L --silent -o /tmp/${SENCHA_CMD_FILENAME}.run.zip ${SENCHA_CMD_DOWNLOAD_URL} && \
+		unzip /tmp/${SENCHA_CMD_FILENAME}.run.zip -d /tmp && \
+		chmod +x /tmp/${SENCHA_CMD_FILENAME}.run && \
+		/tmp/${SENCHA_CMD_FILENAME}.run --prefix /opt --mode unattended && \
+		rm -rf /tmp/*
+		
 # add docker-entrypoint.sh script
 COPY            docker-entrypoint.sh ${BAMBOO_INSTALL_DIR}/bin/
 
