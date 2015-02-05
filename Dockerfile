@@ -20,7 +20,21 @@ ENV		PATH /opt/Sencha/Cmd/${SENCHA_CMD_VERSION}:/usr/local/sbin:/usr/local/bin:/
 
 # install needed debian packages & clean up
 RUN             apt-get update && \
-                apt-get install -y --no-install-recommends curl tar xmlstarlet ca-certificates git php5-cli php5-curl php5-mysql php5-xdebug phpunit openssh-client ruby unzip && \
+                apt-get install -y --no-install-recommends curl tar xmlstarlet ca-certificates git openssh-client && \
+                apt-get clean autoclean && \
+                apt-get autoremove --yes && \
+                rm -rf /var/lib/{apt,dpkg,cache,log}/
+
+# install PHP development dependencies
+RUN             apt-get update && \
+                apt-get install -y --no-install-recommends curl tar php5-cli php5-curl php5-mysql php5-xdebug phpunit && \
+                apt-get clean autoclean && \
+                apt-get autoremove --yes && \
+                rm -rf /var/lib/{apt,dpkg,cache,log}/
+
+# install SenchaCmd dependencies
+RUN             apt-get update && \
+                apt-get install -y --no-install-recommends ruby unzip libfreetype6 libfontconfig1 && \
                 apt-get clean autoclean && \
                 apt-get autoremove --yes && \
                 rm -rf /var/lib/{apt,dpkg,cache,log}/
