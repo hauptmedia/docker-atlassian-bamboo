@@ -17,6 +17,7 @@ ENV		RUN_GROUP           daemon
 ENV             DEBIAN_FRONTEND noninteractive
 ENV		PATH /opt/Sencha/Cmd/${SENCHA_CMD_VERSION}:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
+
 # install needed debian packages & clean up
 RUN             apt-get update && \
                 apt-get install -y --no-install-recommends curl tar xmlstarlet ca-certificates git php5-cli php5-curl php5-mysql php5-xdebug phpunit openssh-client ruby unzip && \
@@ -24,16 +25,22 @@ RUN             apt-get update && \
                 apt-get autoremove --yes && \
                 rm -rf /var/lib/{apt,dpkg,cache,log}/
 
+# change ownership of opt directory to RUN_USER
+RUN		chown -R ${RUN_USER}:${RUN_GROUP} /opt
+
+# run the following commands with this user and group
+USER		${RUN_USER}:${RUN_GROUP}	
+
 # download and extract bamboo 
 RUN             mkdir -p ${BAMBOO_INSTALL_DIR} && \
                 curl -L --silent http://www.atlassian.com/software/bamboo/downloads/binary/atlassian-bamboo-${BAMBOO_VERSION}.tar.gz | tar -xz --strip=1 -C ${BAMBOO_INSTALL_DIR} && \
-                echo -e "\nbamboo.home=$BAMBOO_HOME" >> "${BAMBOO_INSTALL_DIR}/atlassian-bamboo/WEB-INF/classes/bamboo-init.properties" && \
-                chown -R ${RUN_USER}:${RUN_GROUP} ${BAMBOO_INSTALL_DIR}
+                echo -e "\nbamboo.home=$BAMBOO_HOME" >> "${BAMBOO_INSTALL_DIR}/atlassian-bamboo/WEB-INF/classes/bamboo-init.properties"
 
 # integrate mysql connector j library
 RUN             curl -L --silent http://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-${MYSQL_CONNECTOR_J_VERSION}.tar.gz | tar -xz --strip=1 -C /tmp && \
                 cp /tmp/mysql-connector-java-${MYSQL_CONNECTOR_J_VERSION}-bin.jar ${BAMBOO_INSTALL_DIR}/lib && \
                 rm -rf /tmp/*
+
 
 # integrate SenchaCmd
 RUN		curl -L --silent -o /tmp/${SENCHA_CMD_FILENAME}.run.zip ${SENCHA_CMD_DOWNLOAD_URL} && \
@@ -44,8 +51,6 @@ RUN		curl -L --silent -o /tmp/${SENCHA_CMD_FILENAME}.run.zip ${SENCHA_CMD_DOWNLO
 		
 # add docker-entrypoint.sh script
 COPY            docker-entrypoint.sh ${BAMBOO_INSTALL_DIR}/bin/
-
-USER		${RUN_USER}:${RUN_GROUP}	
 
 # HTTP Port
 EXPOSE		8085
