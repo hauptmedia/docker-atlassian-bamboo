@@ -27,7 +27,7 @@ RUN             apt-get update && \
 
 # install PHP development dependencies
 RUN             apt-get update && \
-                apt-get install -y --no-install-recommends php5-cli php5-curl php5-mysql php5-xdebug phpunit && \
+                apt-get install -y --no-install-recommends php5-cli php5-curl php5-mysql php5-xdebug php5-sqlite phpunit && \
                 apt-get clean autoclean && \
                 apt-get autoremove --yes && \
                 rm -rf /var/lib/{apt,dpkg,cache,log}/
