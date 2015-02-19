@@ -52,5 +52,8 @@ if [ -n "$CONTEXT_PATH" ]; then
         xmlstarlet ed --inplace --insert "/Server/Service/Engine/Host/Context" --type attr -n path -v "$CONTEXT_PATH" $BAMBOO_INSTALL_DIR/conf/server.xml
 fi
 
+# configure git
+git config --global http.sslVerify false
+
 exec "$@"
 

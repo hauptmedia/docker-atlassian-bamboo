@@ -4,15 +4,13 @@ MAINTAINER	Julian Haupt <julian.haupt@hauptmedia.de>
 ENV		BAMBOO_VERSION 5.7.2 
 ENV		MYSQL_CONNECTOR_J_VERSION 5.1.34
 
+ENV		BAMBOO_USER     	bamboo
 ENV		BAMBOO_HOME     	/var/atlassian/application-data/bamboo
 ENV		BAMBOO_INSTALL_DIR	/opt/atlassian/bamboo
 
 ENV		SENCHA_CMD_VERSION	5.1.1.39
 ENV		SENCHA_CMD_FILENAME	SenchaCmd-${SENCHA_CMD_VERSION}-linux-x64
 ENV		SENCHA_CMD_DOWNLOAD_URL http://cdn.sencha.com/cmd/${SENCHA_CMD_VERSION}/${SENCHA_CMD_FILENAME}.run.zip
-
-ENV		RUN_USER            daemon
-ENV		RUN_GROUP           daemon
 
 ENV             DEBIAN_FRONTEND noninteractive
 ENV		PATH /opt/Sencha/Cmd/${SENCHA_CMD_VERSION}:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
@@ -39,11 +37,16 @@ RUN             apt-get update && \
                 apt-get autoremove --yes && \
                 rm -rf /var/lib/{apt,dpkg,cache,log}/
 
-# change ownership of opt directory to RUN_USER
-RUN		chown -R ${RUN_USER}:${RUN_GROUP} /opt
+# create bamboo user
+RUN		mkdir -p ${BAMBOO_HOME} && \
+		useradd --home ${BAMBOO_HOME} --shell /bin/bash --comment "Bamboo User" ${BAMBOO_USER} && \
+		chown -R ${BAMBOO_USER}:${BAMBOO_USER} ${BAMBOO_HOME}
+
+# change ownership of opt directory to BAMBOO_USER
+RUN		chown -R ${BAMBOO_USER}:${BAMBOO_USER} /opt
 
 # run the following commands with this user and group
-USER		${RUN_USER}:${RUN_GROUP}	
+USER		${BAMBOO_USER}:${BAMBOO_USER}	
 
 # download and extract bamboo 
 RUN             mkdir -p ${BAMBOO_INSTALL_DIR} && \
@@ -62,7 +65,7 @@ RUN		curl -L --silent -o /tmp/${SENCHA_CMD_FILENAME}.run.zip ${SENCHA_CMD_DOWNLO
 		chmod +x /tmp/${SENCHA_CMD_FILENAME}.run && \
 		/tmp/${SENCHA_CMD_FILENAME}.run --prefix /opt --mode unattended && \
 		rm -rf /tmp/*
-		
+	
 # add docker-entrypoint.sh script
 COPY            docker-entrypoint.sh ${BAMBOO_INSTALL_DIR}/bin/
 
