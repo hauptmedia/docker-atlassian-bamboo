@@ -37,6 +37,9 @@ RUN             apt-get update && \
                 apt-get autoremove --yes && \
                 rm -rf /var/lib/{apt,dpkg,cache,log}/
 
+# install Java/Scala dependencies
+RUN             curl -L --silent https://dl.bintray.com/sbt/native-packages/sbt/0.13.7/sbt-0.13.7.tgz | tar -xz -C /opt
+
 # create bamboo user
 RUN		mkdir -p ${BAMBOO_HOME} && \
 		useradd --home ${BAMBOO_HOME} --shell /bin/bash --comment "Bamboo User" ${BAMBOO_USER} && \
