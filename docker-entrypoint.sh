@@ -5,6 +5,12 @@ if [ -z "$BAMBOO_HOME" ]; then
 	exit 1
 fi
 
+# if a DOCKER_GID was specified add the bamboo user to the docker group
+if [ -n ${DOCKER_GID} ]; then
+        groupadd -g ${DOCKER_GID} docker
+	gpasswd -a ${BAMBOO_USER} docker 
+fi
+
 if [ -n "$MYSQL_NAME" ]; then 
 	if [ -z "$MYSQL_ENV_MYSQL_BAMBOO_USER" ]; then
 		echo Missing MYSQL_BAMBOO_USER environment variable from docker container named mysql
