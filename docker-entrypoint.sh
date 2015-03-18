@@ -1,7 +1,7 @@
 #!/bin/sh
 
 if [ -z "$BAMBOO_HOME" ]; then
-	echo Missing STASH_HOME env
+	echo Missing BAMBOO_HOME env
 	exit 1
 fi
 
@@ -40,8 +40,4 @@ if [ -n "$CONTEXT_PATH" ]; then
         xmlstarlet ed --inplace --insert "/Server/Service/Engine/Host/Context" --type attr -n path -v "$CONTEXT_PATH" $BAMBOO_INSTALL_DIR/conf/server.xml
 fi
 
-# configure git
-git config --global http.sslVerify false
-
-exec "$@"
-
+exec su ${BAMBOO_USER} -c "$@"

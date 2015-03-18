@@ -51,10 +51,11 @@ RUN		chown -R ${BAMBOO_USER}:${BAMBOO_USER} /opt
 # run the following commands with this user and group
 USER		${BAMBOO_USER}:${BAMBOO_USER}	
 
-# download and extract bamboo 
+# download and extract bamboo & configure git
 RUN             mkdir -p ${BAMBOO_INSTALL_DIR} && \
                 curl -L --silent http://www.atlassian.com/software/bamboo/downloads/binary/atlassian-bamboo-${BAMBOO_VERSION}.tar.gz | tar -xz --strip=1 -C ${BAMBOO_INSTALL_DIR} && \
-                echo -e "\nbamboo.home=$BAMBOO_HOME" >> "${BAMBOO_INSTALL_DIR}/atlassian-bamboo/WEB-INF/classes/bamboo-init.properties"
+                echo -e "\nbamboo.home=$BAMBOO_HOME" >> "${BAMBOO_INSTALL_DIR}/atlassian-bamboo/WEB-INF/classes/bamboo-init.properties" && \
+		git config --global http.sslVerify false
 
 # integrate mysql connector j library
 RUN             curl -L --silent http://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-${MYSQL_CONNECTOR_J_VERSION}.tar.gz | tar -xz --strip=1 -C /tmp && \
@@ -81,6 +82,8 @@ EXPOSE		54663
 VOLUME		["${BAMBOO_INSTALL_DIR}"]
 
 WORKDIR		${BAMBOO_INSTALL_DIR}
+
+USER		root:root
 
 ENTRYPOINT	["bin/docker-entrypoint.sh"]
 CMD		["bin/start-bamboo.sh", "-fg"]
