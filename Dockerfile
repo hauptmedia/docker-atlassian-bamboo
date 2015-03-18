@@ -6,6 +6,7 @@ ENV		BAMBOO_VERSION 5.7.2
 ENV		MYSQL_CONNECTOR_J_VERSION 5.1.34
 
 ENV		BAMBOO_USER     	bamboo
+ENV		BAMBOO_GROUP     	docker	
 ENV		BAMBOO_HOME     	/var/atlassian/application-data/bamboo
 ENV		BAMBOO_INSTALL_DIR	/opt/atlassian/bamboo
 
@@ -46,13 +47,13 @@ RUN		mkdir -p ${BAMBOO_HOME} && \
 		useradd --home ${BAMBOO_HOME} --shell /bin/bash --comment "Bamboo User" ${BAMBOO_USER} && \
        		groupadd -g ${DOCKER_GID} docker && \
 		gpasswd -a ${BAMBOO_USER} docker && \
-		chown -R ${BAMBOO_USER}:${BAMBOO_USER} ${BAMBOO_HOME}
+		chown -R ${BAMBOO_USER}:${BAMBOO_GROUP} ${BAMBOO_HOME}
 
 # change ownership of opt directory to BAMBOO_USER
-RUN		chown -R ${BAMBOO_USER}:${BAMBOO_USER} /opt
+RUN		chown -R ${BAMBOO_USER}:${BAMBOO_GROUP} /opt
 
 # run the following commands with this user and group
-USER		${BAMBOO_USER}:${BAMBOO_USER}	
+USER		${BAMBOO_USER}:${BAMBOO_GROUP}
 
 # download and extract bamboo & configure git
 RUN             mkdir -p ${BAMBOO_INSTALL_DIR} && \
