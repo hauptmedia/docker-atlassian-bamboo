@@ -1,6 +1,7 @@
 FROM		hauptmedia/java:oracle-java7
 MAINTAINER	Julian Haupt <julian.haupt@hauptmedia.de>
 
+ENV		DOCKER_GID 999
 ENV		BAMBOO_VERSION 5.7.2 
 ENV		MYSQL_CONNECTOR_J_VERSION 5.1.34
 
@@ -41,8 +42,10 @@ RUN             apt-get update && \
 RUN             curl -L --silent https://dl.bintray.com/sbt/native-packages/sbt/0.13.7/sbt-0.13.7.tgz | tar -xz -C /opt
 
 # create bamboo user
-RUN		mkdir -p ${BAMBOO_HOME} && \
+RUN		mkdir -p ${BAMBOO_HOME} && \	
 		useradd --home ${BAMBOO_HOME} --shell /bin/bash --comment "Bamboo User" ${BAMBOO_USER} && \
+       		groupadd -g ${DOCKER_GID} docker && \
+		gpasswd -a ${BAMBOO_USER} docker && \
 		chown -R ${BAMBOO_USER}:${BAMBOO_USER} ${BAMBOO_HOME}
 
 # change ownership of opt directory to BAMBOO_USER
@@ -82,8 +85,6 @@ EXPOSE		54663
 VOLUME		["${BAMBOO_INSTALL_DIR}"]
 
 WORKDIR		${BAMBOO_INSTALL_DIR}
-
-USER		root:root
 
 ENTRYPOINT	["bin/docker-entrypoint.sh"]
 CMD		["bin/start-bamboo.sh", "-fg"]
