@@ -77,6 +77,9 @@ RUN		curl -L --silent -o /tmp/${SENCHA_CMD_FILENAME}.run.zip ${SENCHA_CMD_DOWNLO
 # add docker-entrypoint.sh script
 COPY            docker-entrypoint.sh ${BAMBOO_INSTALL_DIR}/bin/
 
+# add sbt wrapper
+COPY		sbt-wrapper	${BAMBOO_INSTALL_DIR}/bin/
+
 # HTTP Port
 EXPOSE		8085
 
