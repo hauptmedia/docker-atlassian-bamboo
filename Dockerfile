@@ -1,4 +1,4 @@
-FROM		hauptmedia/java:oracle-java7
+FROM		hauptmedia/java:oracle-java8
 MAINTAINER	Julian Haupt <julian.haupt@hauptmedia.de>
 
 ENV		DOCKER_GID 999
@@ -10,37 +10,14 @@ ENV		BAMBOO_GROUP     	docker
 ENV		BAMBOO_HOME     	/var/atlassian/application-data/bamboo
 ENV		BAMBOO_INSTALL_DIR	/opt/atlassian/bamboo
 
-ENV		SENCHA_CMD_VERSION	5.1.1.39
-ENV		SENCHA_CMD_FILENAME	SenchaCmd-${SENCHA_CMD_VERSION}-linux-x64
-ENV		SENCHA_CMD_DOWNLOAD_URL http://cdn.sencha.com/cmd/${SENCHA_CMD_VERSION}/${SENCHA_CMD_FILENAME}.run.zip
-
 ENV             DEBIAN_FRONTEND noninteractive
-ENV		PATH /opt/Sencha/Cmd/${SENCHA_CMD_VERSION}:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-
 
 # install needed debian packages & clean up
 RUN             apt-get update && \
-                apt-get install -y --no-install-recommends curl tar xmlstarlet ca-certificates git openssh-client build-essential && \
+                apt-get install -y --no-install-recommends curl tar xmlstarlet ca-certificates git openssh-client && \
                 apt-get clean autoclean && \
                 apt-get autoremove --yes && \
                 rm -rf /var/lib/{apt,dpkg,cache,log}/
-
-# install PHP development dependencies
-RUN             apt-get update && \
-                apt-get install -y --no-install-recommends php5-cli php5-curl php5-mysql php5-xdebug php5-sqlite phpunit && \
-                apt-get clean autoclean && \
-                apt-get autoremove --yes && \
-                rm -rf /var/lib/{apt,dpkg,cache,log}/
-
-# install SenchaCmd dependencies
-RUN             apt-get update && \
-                apt-get install -y --no-install-recommends ruby unzip libfreetype6 libfontconfig1 && \
-                apt-get clean autoclean && \
-                apt-get autoremove --yes && \
-                rm -rf /var/lib/{apt,dpkg,cache,log}/
-
-# install Java/Scala dependencies
-RUN             curl -L --silent https://dl.bintray.com/sbt/native-packages/sbt/0.13.7/sbt-0.13.7.tgz | tar -xz -C /opt
 
 # create bamboo user
 RUN		mkdir -p ${BAMBOO_HOME} && \	
@@ -67,18 +44,8 @@ RUN             curl -L --silent http://dev.mysql.com/get/Downloads/Connector-J/
                 rm -rf /tmp/*
 
 
-# integrate SenchaCmd
-RUN		curl -L --silent -o /tmp/${SENCHA_CMD_FILENAME}.run.zip ${SENCHA_CMD_DOWNLOAD_URL} && \
-		unzip /tmp/${SENCHA_CMD_FILENAME}.run.zip -d /tmp && \
-		chmod +x /tmp/${SENCHA_CMD_FILENAME}.run && \
-		/tmp/${SENCHA_CMD_FILENAME}.run --prefix /opt --mode unattended && \
-		rm -rf /tmp/*
-	
 # add docker-entrypoint.sh script
 COPY            docker-entrypoint.sh ${BAMBOO_INSTALL_DIR}/bin/
-
-# add sbt wrapper
-COPY		sbt-wrapper	${BAMBOO_INSTALL_DIR}/bin/
 
 # HTTP Port
 EXPOSE		8085
