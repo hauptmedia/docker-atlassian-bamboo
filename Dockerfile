@@ -14,7 +14,7 @@ ENV             DEBIAN_FRONTEND noninteractive
 
 # install needed debian packages & clean up
 RUN             apt-get update && \
-                apt-get install -y --no-install-recommends curl tar xmlstarlet ca-certificates git openssh-client && \
+                apt-get install -y --no-install-recommends curl tar xmlstarlet ca-certificates git openssh-client libapparmor1 && \
                 apt-get clean autoclean && \
                 apt-get autoremove --yes && \
                 rm -rf /var/lib/{apt,dpkg,cache,log}/
