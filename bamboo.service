@@ -1,0 +1,30 @@
+[Unit]
+Description=Bamboo Service
+After=docker.service
+Requires=docker.service
+
+[Service]
+Environment="NAME=bamboo"
+TimeoutStartSec=300
+ExecStartPre=-/usr/bin/docker kill ${NAME}
+ExecStartPre=-/usr/bin/docker rm -f ${NAME}
+ExecStartPre=/usr/bin/docker pull hauptmedia/atlassian-bamboo
+ExecStart=/usr/bin/docker run \
+	--name ${NAME} \
+	-p 127.0.0.1:8085:8085 \
+	-v /var/volumes/${NAME}/var/atlassian/application-data/bamboo:/var/atlassian/application-data/bamboo \
+	-e CONNECTOR_PROXYNAME=bamboo.domain.com \
+	-e CONNECTOR_PROXYPORT=80 \
+	-e CONNECTOR_SECURE=false \
+	-e CONNECTOR_SCHEME=http \
+	-e CONTEXT_PATH=/ \
+	-v /var/run/docker.sock:/var/run/docker.sock \
+	-v /usr/bin/docker:/usr/bin/docker:ro \
+	-e DOCKER_GID=144 \
+	hauptmedia/atlassian-bamboo
+ExecStop=/usr/bin/docker stop ${NAME}
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+
