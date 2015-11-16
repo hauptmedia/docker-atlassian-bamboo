@@ -20,7 +20,7 @@ RUN            apt-get update && \
                rm -rf /var/lib/{apt,dpkg,cache,log}/ 
 
 # add nodejs upstream repo
-RUN		(curl -sL https://deb.nodesource.com/setup_5.x | bash -) && \
+RUN		(curl -sL https://deb.nodesource.com/setup_0.12 | bash -) && \
 		apt-get update && \
                 apt-get install -y --no-install-recommends nodejs && \
                 apt-get clean autoclean && \
