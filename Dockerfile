@@ -13,12 +13,20 @@ ENV		BAMBOO_INSTALL_DIR	/opt/atlassian/bamboo
 ENV             DEBIAN_FRONTEND noninteractive
 
 # install needed debian packages & clean up
-RUN             apt-get update && \
-                apt-get install -y --no-install-recommends curl tar xmlstarlet ca-certificates git openssh-client libapparmor1 libsqlite3-0 php5-cli npm && \
+RUN            apt-get update && \
+               apt-get install -y --no-install-recommends curl tar xmlstarlet ca-certificates git openssh-client libapparmor1 libsqlite3-0 php5-cli && \
+               apt-get clean autoclean && \
+               apt-get autoremove --yes && \
+               rm -rf /var/lib/{apt,dpkg,cache,log}/ 
+
+# add nodejs upstream repo
+RUN		(curl -sL https://deb.nodesource.com/setup_5.x | bash -) && \
+		apt-get update && \
+                apt-get install -y --no-install-recommends nodejs && \
                 apt-get clean autoclean && \
                 apt-get autoremove --yes && \
                 rm -rf /var/lib/{apt,dpkg,cache,log}/
-# install grunt
+
 RUN		npm install -g grunt grunt-cli
 
 # create bamboo user
