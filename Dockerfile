@@ -18,6 +18,8 @@ RUN             apt-get update && \
                 apt-get clean autoclean && \
                 apt-get autoremove --yes && \
                 rm -rf /var/lib/{apt,dpkg,cache,log}/
+# install grunt
+RUN		npm install -g grunt
 
 # create bamboo user
 RUN		mkdir -p ${BAMBOO_HOME} && \	
