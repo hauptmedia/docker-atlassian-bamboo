@@ -27,7 +27,8 @@ RUN		(curl -sL https://deb.nodesource.com/setup_5.x | bash -) && \
                 apt-get autoremove --yes && \
                 rm -rf /var/lib/{apt,dpkg,cache,log}/
 
-RUN		npm install -g grunt grunt-cli
+RUN		npm install -g grunt grunt-cli && \
+		rm -rf /tmp/*
 
 # create bamboo user
 RUN		mkdir -p ${BAMBOO_HOME} && \	
