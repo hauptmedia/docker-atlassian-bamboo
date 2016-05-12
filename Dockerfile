@@ -14,7 +14,7 @@ ENV             DEBIAN_FRONTEND noninteractive
 
 # install needed debian packages & clean up
 RUN            apt-get update && \
-               apt-get install -y --no-install-recommends sendemail libcrypt-ssleay-perl curl tar xmlstarlet ca-certificates git openssh-client libapparmor1 libsqlite3-0 php5-cli rsync && \
+               apt-get install -y --no-install-recommends libio-socket-ssl-perl sendemail libcrypt-ssleay-perl curl tar xmlstarlet ca-certificates git openssh-client libapparmor1 libsqlite3-0 php5-cli rsync && \
                apt-get clean autoclean && \
                apt-get autoremove --yes && \
                rm -rf /var/lib/{apt,dpkg,cache,log}/ 
