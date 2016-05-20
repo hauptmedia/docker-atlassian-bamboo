@@ -54,8 +54,8 @@ USER		${BAMBOO_USER}:${BAMBOO_GROUP}
 # integrate SenchaCmd (do this after we changed the user)
 RUN		curl -L --silent -o /tmp/${SENCHA_CMD_FILENAME}.sh.zip ${SENCHA_CMD_DOWNLOAD_URL} && \
 		unzip /tmp/${SENCHA_CMD_FILENAME}.sh.zip -d /tmp && \
-		chmod +x /tmp/${SENCHA_CMD_FILENAME}.sh && \
-		/tmp/${SENCHA_CMD_FILENAME}.sh --prefix /opt --mode unattended && \
+		chmod +x /tmp/${SENCHA_CMD_FILENAME}* && \
+		$(find /tmp -name "${SENCHA_CMD_FILENAME}*" -print -quit) --prefix /opt --mode unattended && \
 		rm -rf /tmp/*
 
 # download and extract bamboo & configure git
