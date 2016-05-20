@@ -55,7 +55,7 @@ USER		${BAMBOO_USER}:${BAMBOO_GROUP}
 RUN		curl -L --silent -o /tmp/${SENCHA_CMD_FILENAME}.sh.zip ${SENCHA_CMD_DOWNLOAD_URL} && \
 		unzip /tmp/${SENCHA_CMD_FILENAME}.sh.zip -d /tmp && \
 		rm /tmp/${SENCHA_CMD_FILENAME}.sh.zip && \
-		chmod +x /tmp/${SENCHA_CMD_FILENAME}* && \
+		chmod +x /tmp/SenchaCmd-* && \
 		$(find /tmp -name "SenchaCmd-*" -print -quit) --prefix /opt --mode unattended && \
 		rm -rf /tmp/*
 
