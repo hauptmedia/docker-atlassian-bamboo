@@ -15,7 +15,7 @@ ENV		SENCHA_CMD_FILENAME	SenchaCmd-${SENCHA_CMD_VERSION}-linux-amd64
 ENV		SENCHA_CMD_DOWNLOAD_URL http://cdn.sencha.com/cmd/${SENCHA_CMD_VERSION}/no-jre/${SENCHA_CMD_FILENAME}.sh.zip
 
 ENV             DEBIAN_FRONTEND noninteractive
-ENV		PATH /opt/Sencha/Cmd/${SENCHA_CMD_VERSION}:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ENV		PATH /opt/SenchaCmd:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 # install needed debian packages & clean up
 RUN            apt-get update && \
@@ -56,7 +56,7 @@ RUN		curl -L --silent -o /tmp/${SENCHA_CMD_FILENAME}.sh.zip ${SENCHA_CMD_DOWNLOA
 		unzip /tmp/${SENCHA_CMD_FILENAME}.sh.zip -d /tmp && \
 		rm /tmp/${SENCHA_CMD_FILENAME}.sh.zip && \
 		chmod +x /tmp/SenchaCmd-* && \
-		$(find /tmp -name "SenchaCmd-*" -print -quit) -dir /opt -q && \
+		$(find /tmp -name "SenchaCmd-*" -print -quit) -dir /opt/SenchaCmd -q && \
 		rm -rf /tmp/*
 
 # download and extract bamboo & configure git
