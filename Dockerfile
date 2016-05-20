@@ -43,7 +43,7 @@ RUN		mkdir -p ${BAMBOO_HOME} && \
 		useradd --home ${BAMBOO_HOME} --shell /bin/bash --comment "Bamboo User" ${BAMBOO_USER} && \
        		groupadd -g ${DOCKER_GID} docker && \
 		gpasswd -a ${BAMBOO_USER} docker && \
-		chown -R ${BAMBOO_USER}:${BAMBOO_GROUP} ${BAMBOO_HOME}
+		chown -R ${BAMBOO_USER}:${BAMBOO_GROUP} ${BAMBOO_HOME} /opt
 
 # change ownership of opt directory to BAMBOO_USER
 RUN		chown -R ${BAMBOO_USER}:${BAMBOO_GROUP} /opt
@@ -56,7 +56,7 @@ RUN		curl -L --silent -o /tmp/${SENCHA_CMD_FILENAME}.sh.zip ${SENCHA_CMD_DOWNLOA
 		unzip /tmp/${SENCHA_CMD_FILENAME}.sh.zip -d /tmp && \
 		rm /tmp/${SENCHA_CMD_FILENAME}.sh.zip && \
 		chmod +x /tmp/SenchaCmd-* && \
-		$(find /tmp -name "SenchaCmd-*" -print -quit) --prefix /opt --mode unattended && \
+		$(find /tmp -name "SenchaCmd-*" -print -quit) -dir /opt -q && \
 		rm -rf /tmp/*
 
 # download and extract bamboo & configure git
