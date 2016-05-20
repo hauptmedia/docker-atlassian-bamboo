@@ -16,7 +16,7 @@ hauptmedia/atlassian-bamboo
 
 ## Included build tools
 * gcc, g++, (build-essentials)
-* SenchaCmd
+* SenchaCmd (/opt/SenchaCmd/sencha)
 * PHP
 * Ruby
 * NodeJS

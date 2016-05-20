@@ -13,7 +13,6 @@ ENV		SENCHA_CMD_FILENAME	SenchaCmd-${SENCHA_CMD_VERSION}-linux-amd64
 ENV		SENCHA_CMD_DOWNLOAD_URL http://cdn.sencha.com/cmd/${SENCHA_CMD_VERSION}/no-jre/${SENCHA_CMD_FILENAME}.sh.zip
 
 ENV             DEBIAN_FRONTEND noninteractive
-ENV		PATH /opt/SenchaCmd:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 # install needed debian packages & clean up
 RUN            apt-get update && \
