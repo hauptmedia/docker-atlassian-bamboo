@@ -2,7 +2,7 @@ FROM		hauptmedia/java:oracle-java8
 MAINTAINER	Julian Haupt <julian.haupt@hauptmedia.de>
 
 ENV		DOCKER_GID 114 
-ENV		BAMBOO_VERSION 5.10.1.1
+ENV		BAMBOO_VERSION 5.11.3
 ENV		MYSQL_CONNECTOR_J_VERSION 5.1.37
 
 ENV		BAMBOO_USER     	bamboo
