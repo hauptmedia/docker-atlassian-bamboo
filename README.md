@@ -12,3 +12,10 @@ docker run -d \
 -v /usr/bin/docker:/usr/bin/docker:ro \
 hauptmedia/atlassian-bamboo
 ```
+
+## Included build tools
+* gcc, g++, (build-essentials)
+* SenchaCmd
+* PHP
+* Ruby
+* NodeJS
