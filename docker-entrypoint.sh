@@ -39,4 +39,4 @@ if [ -n "$DOCKER_GID" ]; then
 	gpasswd -a ${BAMBOO_USER} docker
 fi
 
-exec sudo -u ${BAMBOO_USER} "$@"
+exec su ${BAMBOO_USER} -- "$@"
