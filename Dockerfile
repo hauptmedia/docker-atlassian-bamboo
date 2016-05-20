@@ -10,11 +10,19 @@ ENV		BAMBOO_GROUP     	docker
 ENV		BAMBOO_HOME     	/var/atlassian/application-data/bamboo
 ENV		BAMBOO_INSTALL_DIR	/opt/atlassian/bamboo
 
+ENV		SENCHA_CMD_VERSION	6.1.2
+ENV		SENCHA_CMD_FILENAME	SenchaCmd-${SENCHA_CMD_VERSION}-linux-amd64
+ENV		SENCHA_CMD_DOWNLOAD_URL http://cdn.sencha.com/cmd/${SENCHA_CMD_VERSION}/no-jre/${SENCHA_CMD_FILENAME}.sh.zip
+
 ENV             DEBIAN_FRONTEND noninteractive
+ENV		PATH /opt/Sencha/Cmd/${SENCHA_CMD_VERSION}:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 # install needed debian packages & clean up
 RUN            apt-get update && \
-               apt-get install -y --no-install-recommends libio-socket-ssl-perl sendemail libcrypt-ssleay-perl curl tar xmlstarlet ca-certificates git openssh-client libapparmor1 libsqlite3-0 php5-cli rsync && \
+               apt-get install -y --no-install-recommends \
+	       libio-socket-ssl-perl sendemail libcrypt-ssleay-perl curl tar xmlstarlet ca-certificates \
+	       git openssh-client libapparmor1 libsqlite3-0 php5-cli php5-curl libsqlite3-0 rsync ruby build-essential \
+	       unzip libfreetype6 libfontconfig1 && \
                apt-get clean autoclean && \
                apt-get autoremove --yes && \
                rm -rf /var/lib/{apt,dpkg,cache,log}/ 
@@ -42,6 +50,13 @@ RUN		chown -R ${BAMBOO_USER}:${BAMBOO_GROUP} /opt
 
 # run the following commands with this user and group
 USER		${BAMBOO_USER}:${BAMBOO_GROUP}
+
+# integrate SenchaCmd (do this after we changed the user)
+RUN		curl -L --silent -o /tmp/${SENCHA_CMD_FILENAME}.sh.zip ${SENCHA_CMD_DOWNLOAD_URL} && \
+		unzip /tmp/${SENCHA_CMD_FILENAME}.sh.zip -d /tmp && \
+		chmod +x /tmp/${SENCHA_CMD_FILENAME}.sh && \
+		/tmp/${SENCHA_CMD_FILENAME}.sh --prefix /opt --mode unattended && \
+		rm -rf /tmp/*
 
 # download and extract bamboo & configure git
 RUN             mkdir -p ${BAMBOO_INSTALL_DIR} && \
