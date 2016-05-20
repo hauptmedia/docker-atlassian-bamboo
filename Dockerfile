@@ -5,7 +5,6 @@ ENV		BAMBOO_VERSION 5.11.3
 ENV		MYSQL_CONNECTOR_J_VERSION 5.1.37
 
 ENV		BAMBOO_USER     	bamboo
-ENV		BAMBOO_GROUP     	docker	
 ENV		BAMBOO_HOME     	/var/atlassian/application-data/bamboo
 ENV		BAMBOO_INSTALL_DIR	/opt/atlassian/bamboo
 
@@ -40,13 +39,10 @@ RUN		npm install -g grunt grunt-cli && \
 # create bamboo user
 RUN		mkdir -p ${BAMBOO_HOME} && \	
 		useradd --home ${BAMBOO_HOME} --shell /bin/bash --comment "Bamboo User" ${BAMBOO_USER} && \
-		chown -R ${BAMBOO_USER}:${BAMBOO_GROUP} ${BAMBOO_HOME} /opt
-
-# change ownership of opt directory to BAMBOO_USER
-RUN		chown -R ${BAMBOO_USER}:${BAMBOO_GROUP} /opt
+		chown -R ${BAMBOO_USER} ${BAMBOO_HOME} /opt
 
 # run the following commands with this user and group
-USER		${BAMBOO_USER}:${BAMBOO_GROUP}
+USER		${BAMBOO_USER}
 
 # integrate SenchaCmd (do this after we changed the user)
 RUN		curl -L --silent -o /tmp/${SENCHA_CMD_FILENAME}.sh.zip ${SENCHA_CMD_DOWNLOAD_URL} && \
