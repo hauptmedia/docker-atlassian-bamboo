@@ -1,7 +1,6 @@
 FROM		hauptmedia/java:oracle-java8
 MAINTAINER	Julian Haupt <julian.haupt@hauptmedia.de>
 
-ENV		DOCKER_GID 114 
 ENV		BAMBOO_VERSION 5.11.3
 ENV		MYSQL_CONNECTOR_J_VERSION 5.1.37
 
@@ -41,8 +40,6 @@ RUN		npm install -g grunt grunt-cli && \
 # create bamboo user
 RUN		mkdir -p ${BAMBOO_HOME} && \	
 		useradd --home ${BAMBOO_HOME} --shell /bin/bash --comment "Bamboo User" ${BAMBOO_USER} && \
-       		groupadd -g ${DOCKER_GID} docker && \
-		gpasswd -a ${BAMBOO_USER} docker && \
 		chown -R ${BAMBOO_USER}:${BAMBOO_GROUP} ${BAMBOO_HOME} /opt
 
 # change ownership of opt directory to BAMBOO_USER
@@ -83,6 +80,9 @@ EXPOSE		54663
 VOLUME		["${BAMBOO_INSTALL_DIR}"]
 
 WORKDIR		${BAMBOO_INSTALL_DIR}
+
+# run the entrypoint as root
+USER		root:root
 
 ENTRYPOINT	["bin/docker-entrypoint.sh"]
 CMD		["bin/start-bamboo.sh", "-fg"]

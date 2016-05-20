@@ -34,4 +34,9 @@ if [ -n "$CONTEXT_PATH" ]; then
         xmlstarlet ed --inplace --insert "/Server/Service/Engine/Host/Context" --type attr -n path -v "$CONTEXT_PATH" $BAMBOO_INSTALL_DIR/conf/server.xml
 fi
 
-exec "$@"
+if [ -n "$DOCKER_GID" ]; then
+	groupadd -g ${DOCKER_GID} docker && \
+	gpasswd -a ${BAMBOO_USER} docker
+fi
+
+exec sudo -u ${BAMBOO_USER} "$@"
