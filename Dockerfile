@@ -54,6 +54,7 @@ USER		${BAMBOO_USER}:${BAMBOO_GROUP}
 # integrate SenchaCmd (do this after we changed the user)
 RUN		curl -L --silent -o /tmp/${SENCHA_CMD_FILENAME}.sh.zip ${SENCHA_CMD_DOWNLOAD_URL} && \
 		unzip /tmp/${SENCHA_CMD_FILENAME}.sh.zip -d /tmp && \
+		rm /tmp/${SENCHA_CMD_FILENAME}.sh.zip && \
 		chmod +x /tmp/${SENCHA_CMD_FILENAME}* && \
 		$(find /tmp -name "${SENCHA_CMD_FILENAME}*" -print -quit) --prefix /opt --mode unattended && \
 		rm -rf /tmp/*
