@@ -56,7 +56,7 @@ RUN		curl -L --silent -o /tmp/${SENCHA_CMD_FILENAME}.sh.zip ${SENCHA_CMD_DOWNLOA
 		unzip /tmp/${SENCHA_CMD_FILENAME}.sh.zip -d /tmp && \
 		rm /tmp/${SENCHA_CMD_FILENAME}.sh.zip && \
 		chmod +x /tmp/${SENCHA_CMD_FILENAME}* && \
-		$(find /tmp -name "${SENCHA_CMD_FILENAME}*" -print -quit) --prefix /opt --mode unattended && \
+		$(find /tmp -name "SenchaCmd-*" -print -quit) --prefix /opt --mode unattended && \
 		rm -rf /tmp/*
 
 # download and extract bamboo & configure git
