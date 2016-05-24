@@ -72,8 +72,6 @@ EXPOSE		8085
 # Remote Agent port
 EXPOSE		54663
 
-VOLUME		["${BAMBOO_INSTALL_DIR}"]
-
 WORKDIR		${BAMBOO_INSTALL_DIR}
 
 # run the entrypoint as root
