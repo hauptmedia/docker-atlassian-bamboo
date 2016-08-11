@@ -19,7 +19,7 @@ RUN            apt-get update && \
                apt-get install -y --no-install-recommends \
 	       libio-socket-ssl-perl sendemail libcrypt-ssleay-perl curl tar xmlstarlet ca-certificates \
 	       git openssh-client libapparmor1 libsqlite3-0 php5-cli php5-curl libsqlite3-0 rsync ruby build-essential \
-	       unzip libfreetype6 libfontconfig1 libltdl7 mono-complete && \
+	       unzip libfreetype6 libfontconfig1 libltdl7 mono-complete nuget && \
                apt-get clean autoclean && \
                apt-get autoremove --yes && \
                rm -rf /var/lib/{apt,dpkg,cache,log}/ 
