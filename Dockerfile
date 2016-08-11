@@ -12,6 +12,8 @@ ENV		SENCHA_CMD_VERSION	6.1.2
 ENV		SENCHA_CMD_FILENAME	SenchaCmd-${SENCHA_CMD_VERSION}-linux-amd64
 ENV		SENCHA_CMD_DOWNLOAD_URL http://cdn.sencha.com/cmd/${SENCHA_CMD_VERSION}/no-jre/${SENCHA_CMD_FILENAME}.sh.zip
 
+ENV		MONO_VERSION 4.4.1.0
+
 ENV             DEBIAN_FRONTEND noninteractive
 
 # install needed debian packages & clean up
@@ -50,6 +52,12 @@ RUN		curl -L --silent -o /tmp/${SENCHA_CMD_FILENAME}.sh.zip ${SENCHA_CMD_DOWNLOA
 		chmod +x /tmp/SenchaCmd-* && \
 		$(find /tmp -name "SenchaCmd-*" -print -quit) -dir /opt/SenchaCmd -q && \
 		rm -rf /tmp/*
+# integrate mono
+RUN		apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF && \
+		echo "deb http://download.mono-project.com/repo/debian wheezy/snapshots/${MONO_VERSION} main" > /etc/apt/sources.list.d/mono-xamarin.list && \
+		apt-get update && \
+		apt-get install -y binutils mono-devel ca-certificates-mono fsharp mono-vbnc nuget referenceassemblies-pcl && \
+                rm -rf /var/lib/{apt,dpkg,cache,log}/ 
 
 # download and extract bamboo & configure git
 RUN             mkdir -p ${BAMBOO_INSTALL_DIR} && \
