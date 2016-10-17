@@ -8,7 +8,7 @@ ENV		BAMBOO_USER     	bamboo
 ENV		BAMBOO_HOME     	/var/atlassian/application-data/bamboo
 ENV		BAMBOO_INSTALL_DIR	/opt/atlassian/bamboo
 
-ENV		SENCHA_CMD_VERSION	6.1.2
+ENV		SENCHA_CMD_VERSION	6.2.0
 ENV		SENCHA_CMD_FILENAME	SenchaCmd-${SENCHA_CMD_VERSION}-linux-amd64
 ENV		SENCHA_CMD_DOWNLOAD_URL http://cdn.sencha.com/cmd/${SENCHA_CMD_VERSION}/no-jre/${SENCHA_CMD_FILENAME}.sh.zip
 
