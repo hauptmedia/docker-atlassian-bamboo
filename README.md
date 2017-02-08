@@ -21,3 +21,4 @@ hauptmedia/atlassian-bamboo
 * Ruby
 * NodeJS
 * Grunt
+* Apidoc
