@@ -33,7 +33,7 @@ RUN		apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328
 		apt-get install -y mono-devel nuget
 
 # add nodejs upstream repo
-RUN		(curl -sL https://deb.nodesource.com/setup_0.12 | bash -) && \
+RUN		(curl -sL https://deb.nodesource.com/setup_6.x | bash -) && \
 		apt-get update && \
                 apt-get install -y --no-install-recommends nodejs && \
                 apt-get clean autoclean && \
