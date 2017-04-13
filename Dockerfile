@@ -1,7 +1,7 @@
 FROM		hauptmedia/java:oracle-java8
 MAINTAINER	Julian Haupt <julian.haupt@hauptmedia.de>
 
-ENV		BAMBOO_VERSION 5.12.5
+ENV		BAMBOO_VERSION 5.14.5
 ENV		MYSQL_CONNECTOR_J_VERSION 5.1.37
 
 ENV		BAMBOO_USER     	bamboo
