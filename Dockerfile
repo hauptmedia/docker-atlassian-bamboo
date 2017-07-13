@@ -1,7 +1,7 @@
 FROM		hauptmedia/java:oracle-java8
 MAINTAINER	Julian Haupt <julian.haupt@hauptmedia.de>
 
-ENV		BAMBOO_VERSION 5.14.5
+ENV		BAMBOO_VERSION 6.0.2
 ENV		MYSQL_CONNECTOR_J_VERSION 5.1.37
 
 ENV		BAMBOO_USER     	bamboo
@@ -26,9 +26,7 @@ RUN            apt-get update && \
 
 # install mono
 RUN		apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF && \
-		echo "deb http://download.mono-project.com/repo/debian wheezy main" >/etc/apt/sources.list.d/mono-xamarin.list && \
-		echo "deb http://download.mono-project.com/repo/debian wheezy-apache24-compat main" >>/etc/apt/sources.list.d/mono-xamarin.list && \
-		echo "deb http://download.mono-project.com/repo/debian wheezy-libjpeg62-compat main" >>/etc/apt/sources.list.d/mono-xamarin.list && \
+		echo "deb http://download.mono-project.com/repo/debian jessie main" >/etc/apt/sources.list.d/mono-official.list && \
 		apt-get update && \
 		apt-get install -y mono-devel nuget
 
@@ -36,6 +34,7 @@ RUN		apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328
 RUN		(curl -sL https://deb.nodesource.com/setup_6.x | bash -) && \
 		apt-get update && \
                 apt-get install -y --no-install-recommends nodejs && \
+		ln -s /usr/bin/nodejs /usr/local/bin/node && \
                 apt-get clean autoclean && \
                 apt-get autoremove --yes && \
                 rm -rf /var/lib/{apt,dpkg,cache,log}/
