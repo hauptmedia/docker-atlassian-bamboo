@@ -1,4 +1,4 @@
-FROM		hauptmedia/java:oracle-java8
+FROM		debian:buster
 MAINTAINER	Julian Haupt <julian.haupt@hauptmedia.de>
 
 ENV		BAMBOO_VERSION 6.4.0
@@ -15,14 +15,27 @@ ENV		SENCHA_CMD_DOWNLOAD_URL http://cdn.sencha.com/cmd/${SENCHA_CMD_VERSION}/no-
 ENV             DEBIAN_FRONTEND noninteractive
 
 # install needed debian packages & clean up
-RUN            apt-get update && \
-               apt-get install -y --no-install-recommends \
-	       libio-socket-ssl-perl sendemail libcrypt-ssleay-perl curl tar xmlstarlet ca-certificates \
-	       git openssh-client libapparmor1 libsqlite3-0 php5-cli php5-curl libsqlite3-0 rsync ruby build-essential \
-	       unzip libfreetype6 libfontconfig1 libltdl7 maven && \
-               apt-get clean autoclean && \
-               apt-get autoremove --yes && \
-               rm -rf /var/lib/{apt,dpkg,cache,log}/ 
+RUN             apt-get update && \
+                apt-get install -y --no-install-recommends \
+                gnupg libio-socket-ssl-perl sendemail libcrypt-ssleay-perl curl wget tar xmlstarlet ca-certificates \
+                git openssh-client libapparmor1 libsqlite3-0 php7.1-cli php7.1-curl libsqlite3-0 rsync ruby build-essential \
+                unzip libfreetype6 libfontconfig1 libltdl7 maven && \
+                apt-get clean autoclean && \
+                apt-get autoremove --yes && \
+                rm -rf /var/lib/{apt,dpkg,cache,log}/
+
+RUN	            echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main" | tee /etc/apt/sources.list.d/webupd8team-java.list  && \
+                echo "deb-src http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main" | tee -a /etc/apt/sources.list.d/webupd8team-java.list  && \
+                apt-key adv --keyserver keyserver.ubuntu.com --recv-keys EEA14886  && \
+                apt-get update  && \
+                echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections  && \
+                echo debconf shared/accepted-oracle-license-v1-1 seen true | debconf-set-selections  && \
+                DEBIAN_FRONTEND=noninteractive  apt-get install -y --force-yes oracle-java8-installer oracle-java8-set-default  && \
+                rm -rf /var/cache/oracle-jdk8-installer  && \
+                apt-get clean  && \
+                rm -rf /var/lib/apt/lists/*
+
+ENV	JAVA_HOME /usr/lib/jvm/java-8-oracle
 
 # Adding letsencrypt-ca to truststore
 RUN    export KEYSTORE=$JAVA_HOME/jre/lib/security/cacerts && \
@@ -43,12 +56,12 @@ RUN    export KEYSTORE=$JAVA_HOME/jre/lib/security/cacerts && \
 
 # install mono
 RUN		apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF && \
-		echo "deb http://download.mono-project.com/repo/debian jessie main" >/etc/apt/sources.list.d/mono-official.list && \
+		echo "deb http://download.mono-project.com/repo/debian stretch main" >/etc/apt/sources.list.d/mono-official.list && \
 		apt-get update && \
 		apt-get install -y mono-devel nuget
 
 # add nodejs upstream repo
-RUN		(curl -sL https://deb.nodesource.com/setup_6.x | bash -) && \
+RUN		(curl -sL https://deb.nodesource.com/setup_8.x | bash -) && \
 		apt-get update && \
                 apt-get install -y --no-install-recommends nodejs && \
 		ln -s /usr/bin/nodejs /usr/local/bin/node && \
