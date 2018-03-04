@@ -18,7 +18,8 @@ ENV             DEBIAN_FRONTEND noninteractive
 RUN             apt-get update && \
                 apt-get install -y --no-install-recommends \
                 gnupg libio-socket-ssl-perl sendemail libcrypt-ssleay-perl curl wget tar xmlstarlet ca-certificates \
-                git openssh-client libapparmor1 libsqlite3-0 php7.1-cli php7.1-curl libsqlite3-0 rsync ruby build-essential \
+                git openssh-client libapparmor1 libsqlite3-0 libsqlite3-0 rsync ruby build-essential \
+                php7.1-cli php7.1-mysqlnd php7.1-curl php7.1-gd php7.1-sqlite php7.1-xml php7.1-dom php7.1-bcmath php7.1-fpm php7.1-gmp php-pear \
                 unzip libfreetype6 libfontconfig1 libltdl7 maven && \
                 apt-get clean autoclean && \
                 apt-get autoremove --yes && \
