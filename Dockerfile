@@ -24,6 +24,23 @@ RUN            apt-get update && \
                apt-get autoremove --yes && \
                rm -rf /var/lib/{apt,dpkg,cache,log}/ 
 
+# Adding letsencrypt-ca to truststore
+RUN    export KEYSTORE=$JAVA_HOME/jre/lib/security/cacerts && \
+        wget -P /tmp/ https://letsencrypt.org/certs/letsencryptauthorityx1.der && \
+        wget -P /tmp/ https://letsencrypt.org/certs/letsencryptauthorityx2.der && \
+        wget -P /tmp/ https://letsencrypt.org/certs/lets-encrypt-x1-cross-signed.der && \
+        wget -P /tmp/ https://letsencrypt.org/certs/lets-encrypt-x2-cross-signed.der && \
+        wget -P /tmp/ https://letsencrypt.org/certs/lets-encrypt-x3-cross-signed.der && \
+        wget -P /tmp/ https://letsencrypt.org/certs/lets-encrypt-x4-cross-signed.der && \
+        keytool -trustcacerts -keystore $KEYSTORE -storepass changeit -noprompt -importcert -alias isrgrootx1 -file /tmp/letsencryptauthorityx1.der && \
+        keytool -trustcacerts -keystore $KEYSTORE -storepass changeit -noprompt -importcert -alias isrgrootx2 -file /tmp/letsencryptauthorityx2.der && \
+        keytool -trustcacerts -keystore $KEYSTORE -storepass changeit -noprompt -importcert -alias letsencryptauthorityx1 -file /tmp/lets-encrypt-x1-cross-signed.der && \
+        keytool -trustcacerts -keystore $KEYSTORE -storepass changeit -noprompt -importcert -alias letsencryptauthorityx2 -file /tmp/lets-encrypt-x2-cross-signed.der && \
+        keytool -trustcacerts -keystore $KEYSTORE -storepass changeit -noprompt -importcert -alias letsencryptauthorityx3 -file /tmp/lets-encrypt-x3-cross-signed.der && \
+        keytool -trustcacerts -keystore $KEYSTORE -storepass changeit -noprompt -importcert -alias letsencryptauthorityx4 -file /tmp/lets-encrypt-x4-cross-signed.der
+
+# add docker-entrypoint.sh script
+
 # install mono
 RUN		apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF && \
 		echo "deb http://download.mono-project.com/repo/debian jessie main" >/etc/apt/sources.list.d/mono-official.list && \
@@ -69,8 +86,6 @@ RUN             curl -L --silent http://dev.mysql.com/get/Downloads/Connector-J/
                 cp /tmp/mysql-connector-java-${MYSQL_CONNECTOR_J_VERSION}-bin.jar ${BAMBOO_INSTALL_DIR}/lib && \
                 rm -rf /tmp/*
 
-
-# add docker-entrypoint.sh script
 COPY            docker-entrypoint.sh ${BAMBOO_INSTALL_DIR}/bin/
 
 # HTTP Port
