@@ -56,7 +56,7 @@ RUN		(curl -sL https://deb.nodesource.com/setup_6.x | bash -) && \
                 apt-get autoremove --yes && \
                 rm -rf /var/lib/{apt,dpkg,cache,log}/
 
-RUN		npm install -g grunt grunt-cli apidoc && \
+RUN		npm install -g yarn grunt grunt-cli apidoc && \
 		rm -rf /tmp/*
 
 # create bamboo user
