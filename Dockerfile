@@ -1,4 +1,4 @@
-FROM		debian:buster
+FROM		debian:stretch
 MAINTAINER	Julian Haupt <julian.haupt@hauptmedia.de>
 
 ENV		BAMBOO_VERSION 6.4.0
@@ -19,8 +19,11 @@ RUN             apt-get update && \
                 apt-get install -y --no-install-recommends \
                 gnupg libio-socket-ssl-perl sendemail libcrypt-ssleay-perl curl wget tar xmlstarlet ca-certificates \
                 git openssh-client libapparmor1 libsqlite3-0 libsqlite3-0 rsync ruby build-essential \
-                php7.1-cli php7.1-mysqlnd php7.1-curl php7.1-gd php7.1-sqlite php7.1-xml php7.1-dom php7.1-bcmath php7.1-fpm php7.1-gmp php-pear \
-                unzip libfreetype6 libfontconfig1 libltdl7 maven && \
+		apt-transport-https lsb-release unzip dirmngr libfreetype6 libfontconfig1 libltdl7 maven wget && \
+		wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg && \
+		echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/php.list && \
+                apt-get update && \
+		apt-get install -y --force-yes php7.2-cli php7.2-mysqlnd php7.2-curl php7.2-gd php7.2-sqlite php7.2-xml php7.2-dom php7.2-bcmath php7.2-fpm php7.2-gmp php-pear && \
                 apt-get clean autoclean && \
                 apt-get autoremove --yes && \
                 rm -rf /var/lib/{apt,dpkg,cache,log}/
