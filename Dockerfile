@@ -23,7 +23,7 @@ RUN             apt-get update && \
 		wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg && \
 		echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/php.list && \
                 apt-get update && \
-		apt-get install -y --force-yes php7.2-cli php7.2-mysqlnd php7.2-curl php7.2-gd php7.2-sqlite php7.2-xml php7.2-dom php7.2-bcmath php7.2-fpm php7.2-gmp php-pear && \
+		apt-get install -y --force-yes php7.2-cli php7.2-mysqlnd php7.2-curl php7.2-gd php7.2-sqlite php7.2-xml php7.2-dom php7.2-bcmath php7.2-fpm php7.2-gmp php7.2-mbstring php-pear && \
                 apt-get clean autoclean && \
                 apt-get autoremove --yes && \
                 rm -rf /var/lib/{apt,dpkg,cache,log}/
